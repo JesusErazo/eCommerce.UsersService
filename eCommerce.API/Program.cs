@@ -1,3 +1,4 @@
+using eCommerce.API.Middlewares;
 using eCommerce.Core;
 using eCommerce.Infrastructure;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -15,6 +16,9 @@ builder.Services.AddControllers();
 
 //Build the web application
 var app = builder.Build();
+
+//Global exception handler
+app.UseExceptionHandlingMiddleware();
 
 //Routing
 app.UseRouting();
