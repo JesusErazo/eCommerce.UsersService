@@ -35,13 +35,10 @@ internal class UsersRepository : IUsersRepository
 
   public async Task<ApplicationUser?> GetUserByEmailAndPassword(string? email, string? password)
   {
-    return new ApplicationUser()
-    {
-      UserID = Guid.NewGuid(),
-      Email = email,
-      Password = password,
-      PersonName = "Person name",
-      Gender = GenderOptions.Male.ToString(),
-    };
+    string query = @"SELECT * FROM public.""Users""
+                   WHERE ""Email"" = @Email AND ""Password"" = @Password";
+
+    return await _dbContext.DbConnection
+      .QueryFirstOrDefaultAsync<ApplicationUser>(query, new {Email=email, Password=password});
   }
 }
