@@ -1,4 +1,5 @@
 ﻿using eCommerce.Core.DTO;
+using eCommerce.Core.Extensions;
 using eCommerce.Core.ServiceContracts;
 using FluentValidation;
 using FluentValidation.Results;
@@ -31,7 +32,7 @@ public class AuthController: ControllerBase
 
     if (!result.IsValid)
     {
-      return BadRequest(result.Errors);
+      return BadRequest(result.Errors.ToBasicFormat());
     }
 
     AuthenticationResponse? authResp = await _usersService.Register(registerRequest);
@@ -50,7 +51,7 @@ public class AuthController: ControllerBase
     ValidationResult result = await _loginValidator.ValidateAsync(loginRequest);
 
     if (!result.IsValid) {
-      return BadRequest(result.Errors);
+      return BadRequest(result.Errors.ToBasicFormat());
     }
 
     AuthenticationResponse? authResp = await _usersService.Login(loginRequest);
