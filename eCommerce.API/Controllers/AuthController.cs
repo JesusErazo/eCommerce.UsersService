@@ -1,25 +1,37 @@
 ﻿using eCommerce.Core.DTO;
 using eCommerce.Core.ServiceContracts;
+using FluentValidation;
+using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
 
 namespace eCommerce.API.Controllers;
 
-[Route("api/auth")]
 [ApiController]
+[Route("api/auth")]
 public class AuthController: ControllerBase
 {
   private readonly IUsersService _usersService;
-  public AuthController(IUsersService usersService) {
+  private readonly IValidator<LoginRequest> _loginValidator;
+  private readonly IValidator<RegisterRequest> _registerValidator;
+  public AuthController(
+    IUsersService usersService, 
+    IValidator<LoginRequest> loginValidator,
+    IValidator<RegisterRequest> registerValidator
+    ) {
     _usersService = usersService;
+    _loginValidator = loginValidator;
+    _registerValidator = registerValidator;
   }
 
   //Endpoint for user registration use case.
   [HttpPost("register")]
   public async Task<IActionResult> Register(RegisterRequest registerRequest)
   {
-    if (registerRequest == null)
+    ValidationResult result = await _registerValidator.ValidateAsync(registerRequest);
+
+    if (!result.IsValid)
     {
-      return BadRequest("Invalid registration data.");
+      return BadRequest(result.Errors);
     }
 
     AuthenticationResponse? authResp = await _usersService.Register(registerRequest);
@@ -35,8 +47,10 @@ public class AuthController: ControllerBase
   [HttpPost("login")]
   public async Task<IActionResult> Login (LoginRequest loginRequest)
   {
-    if (loginRequest == null) {
-      return BadRequest("Invalid login data.");  
+    ValidationResult result = await _loginValidator.ValidateAsync(loginRequest);
+
+    if (!result.IsValid) {
+      return BadRequest(result.Errors);
     }
 
     AuthenticationResponse? authResp = await _usersService.Login(loginRequest);

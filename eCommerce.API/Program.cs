@@ -13,10 +13,11 @@ builder.Services.AddInfrastructure();
 builder.Services.AddCore();
 
 //Add controllers to the service collection.
-builder.Services.AddControllers().AddJsonOptions(options =>
-{
-  options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-});
+builder.Services.AddControllers()
+ .AddJsonOptions(options =>
+ {
+   options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+ });
 
 builder.Services.AddAutoMapper(typeof(ApplicationUserMappingProfile).Assembly);
 
