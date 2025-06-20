@@ -21,6 +21,23 @@ builder.Services.AddControllers()
 
 builder.Services.AddAutoMapper(typeof(ApplicationUserMappingProfile).Assembly);
 
+//Add API explorer services
+builder.Services.AddEndpointsApiExplorer();
+
+//Add swagger generation services to create swagger specification
+builder.Services.AddSwaggerGen();
+
+//Add CORS services
+builder.Services.AddCors(options =>
+{
+  options.AddDefaultPolicy(builder =>
+  {
+    builder.WithOrigins("https://localhost:4200")
+    .AllowAnyMethod()
+    .AllowAnyHeader();
+  });
+});
+
 //Build the web application
 var app = builder.Build();
 
@@ -29,6 +46,15 @@ app.UseExceptionHandlingMiddleware();
 
 //Routing
 app.UseRouting();
+
+//Adds endpoint  that can serve the swagger.json file
+app.UseSwagger();
+
+//Adds swagger UI (interactive page to explore and test API endpoints)
+app.UseSwaggerUI();
+
+//CORS
+app.UseCors();
 
 //Auth
 app.UseAuthentication();
