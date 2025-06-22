@@ -26,17 +26,6 @@ internal class UsersService : IUsersService
     }
 
     return _mapper.Map<AuthenticationResponse>(user) with { Token="Token", Success=true};
-
-    /*
-    return new AuthenticationResponse(
-      UserID:user.UserID,
-      Email:user.Email,
-      PersonName: user.PersonName,
-      Gender: user.Gender,
-      Token: "Token",
-      Success: true
-    );
-    */
   }
 
   public async Task<AuthenticationResponse?> Register(RegisterRequest registerRequest)
@@ -51,16 +40,5 @@ internal class UsersService : IUsersService
     }
 
     return _mapper.Map<AuthenticationResponse>(registeredUser) with { Token="Token", Success=true};
-
-    /*
-    return new AuthenticationResponse(
-      UserID: registeredUser.UserID,
-      Email: registeredUser.Email,
-      PersonName: registeredUser.PersonName,
-      Gender: registeredUser.Gender,
-      Token: "Token",
-      Success: true
-      );
-    */
   }
 }
